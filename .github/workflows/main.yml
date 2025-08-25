@@ -1,0 +1,28 @@
+name: Daily Check Expired Users
+
+on:
+  schedule:
+    - cron: "0 0 * * *"  # هر ۲۴ ساعت نصف شب UTC
+  workflow_dispatch:   # امکان اجرای دستی هم دارد
+
+jobs:
+  check-expired:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run checkExpired
+        run: node checkExpired.js
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          MONGO_URI: ${{ secrets.MONGO_URI }}
+          CHANNEL_ID: ${{ secrets.CHANNEL_ID }}
+          ADMIN_ID: ${{ secrets.ADMIN_ID }}
